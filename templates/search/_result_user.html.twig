@@ -1,0 +1,18 @@
+<div class="card m-3" style="max-width: 100%;">
+	<div class="row g-0">
+		<div class="col-md-2">
+			<img src="{{ asset(images_directory ~ '/' ~ user.avatar)}}" class="img-thumbnail" width="200" height="200" alt="{{user.username}}">
+		</div>
+		<div class="col-md-8">
+			<div class="card-body">
+				<h5 class="card-title">{{ user.username }}</h5>
+				<p class="card-text d-inline-block text-truncate" style="max-width: 100%;">{{ user.description }}</p>
+
+				<a href="{{path('user_read',{'id': user.id}) }}">
+					<button class="btn btn-danger m-1">Voir profil
+					</button>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<h1>Mes amis</h1>
+
+	<div class="row row-cols-2 row-cols-sm-4 row-cols-md-6 g-4">
+		{% for friend in friends %}
+			<div class="col">
+				<div class="card h-100 text-center">
+					<img src="{{ asset(images_directory ~ '/' ~ friend.avatar) }}" class="rounded-circle img-thumbnail card-img-top" width="100" alt="avatar de {{friend.username}}">
+					<div class="card-body">
+						<h5 class="card-title">{{friend.username}}</h5>
+						<p class="card-text"></p>
+
+						{% if is_granted('FRIEND_DELETE', app.user) %}
+
+							<form action="{{ path('friend_delete', {id: friend.id}) }}" method="post" class="d-inline">
+
+								<button class="btn btn-danger">Supprimer</button>
+
+								<input type="hidden" name="_method" value="delete">
+								<input type="hidden" name="_token" value="{{ csrf_token('deleteFriend') }}">
+							</form>
+
+							<a href="{{path('user_read',{'id': friend.id}) }}" class="btn btn-danger" type="button">
+								Voir le profil
+							</a>
+						{% endif %}
+
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+
+{% endblock %}

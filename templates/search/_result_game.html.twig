@@ -1,0 +1,21 @@
+<div class="card m-3" style="max-width: 100%;">
+	<div class="row g-0">
+		<div class="col-md-2">
+			<img src="{{ asset(images_directory ~ '/' ~ result.image) }}" class="rounded-circle img-thumbnail" width="150" alt="Illustration de {{result.name}}">
+		</div>
+		<div class="col-md-8">
+			<div class="card-body">
+				<h5 class="card-title">{{ result.name }}</h5>
+				<p class="card-text d-inline-block text-truncate" style="max-width: 100%;">{{ result.description }}</p>
+			</p>
+			<footer class="blockquote-footer">Crée le :
+				{{result.createdAt|date('d/m/Y à h:i')}}
+				{{ result.updatedAt is not null ? "modifié le : " ~ result.updatedAt|date('d/m/Y à h:i') }}</footer>
+			<div class="d-grid gap-2 col-6 mx-auto">
+				<a href="{{path('game_read',{'id': result.id}) }}">
+					<button class="btn btn-danger" type="button">Voir le détail de la partie</button>
+				</a>
+			</div>
+		</div>
+	</div>
+</div></div>

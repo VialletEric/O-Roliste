@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	{% if results is defined %}
+		{% if results is not empty %}
+			{% for result in results %}
+
+				{% include "search/_result_game.html.twig" %}
+
+			{% endfor %}
+		{% endif %}
+	{% elseif users is defined %}
+		{% if users is not empty %}
+			{% for user in users %}
+
+				{% include "search/_result_user.html.twig" %}
+
+			{% endfor %}
+		{% endif %}
+	{% endif %}
+{% endblock %}

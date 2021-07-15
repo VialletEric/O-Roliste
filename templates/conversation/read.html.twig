@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="overflow-auto card" id="userMessages" style="max-height: 35rem;">
+		{% for convMessage in convMessages %}
+			<div class="card mt-1">
+				<div class="card-header">
+					<img src="{{ asset(images_directory ~ '/' ~ convMessage.user.avatar) }}"  class="rounded-circle img-thumbnail" width="75" alt="Avatar de {{convMessage.user.username}}">
+					{{convMessage.user.username}}
+					{% if is_granted('MESSAGE_EDIT', convMessage) %}
+						<form method="post" class="d-inline" action="{{ path('user_message_delete', {'id':convMessage.conversation.id,'idMessage':convMessage.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer ce message ?');">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ convMessage.id) }}">
+							<button class="btn btn-danger">Supprimer le message</button>
+						</form>
+					{% endif %}
+				</div>
+				<div class="card-body">
+					<p>{{ convMessage.body }}</p>
+					<footer class="blockquote-footer">Posté le :
+						{{ convMessage.createdAt|date('d/m/Y à h:i')}}
+						{{ convMessage.updatedAt is not null ? "modifié le : " ~ convMessage.updatedAt|date('d/m/Y à h:i') }}</footer>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	<form id="addMessage">
+		<div class="form-group">
+			<textarea class="form-control" id="textBody" rows="3"></textarea>
+			<button class="btn btn-danger">Envoyer</button>
+		</div>
+	</form>
+
+	<script src="/js/main.js" type="module"></script>
+{% endblock %}

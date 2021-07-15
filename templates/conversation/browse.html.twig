@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<h1>Conversations</h1>
+{% for conversation in conversations %}
+
+	<div class="card mb-3" style="max-width: 100%;">
+		<div class="row g-0">
+			<div class="col-md-8">
+				<div class="card-body">
+					<h5 class="card-title">{% if conversation.user1.username != currentUser.username %} {{conversation.user1.username}} {% else %}
+                        {{conversation.user2.username}} {% endif %}</h5>
+				</p>
+				<footer class="blockquote-footer">Crée le :
+					{{conversation.createdAt|date('d/m/Y à h:i')}}
+					{{ conversation.updatedAt is not null ? "modifié le : " ~ conversation.updatedAt|date('d/m/Y à h:i') }}</footer>
+				<div class="d-grid gap-2 col-6 mx-auto">
+					<a href="{{path('conversation_read',{'id': conversation.id}) }}">
+						<button class="btn btn-danger" type="button">Commencer à discuter !</button>
+					</a>
+					<form method="post" class="d-inline" action="{{ path('conversation_delete', {'id':conversation.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer ce message ?');">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ conversation.id) }}">
+						<button class="btn btn-danger">Supprimer la conversation</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endfor %}{% endblock %}

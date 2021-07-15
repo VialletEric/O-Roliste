@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contactez nous !
+{% endblock %}
+
+{% block body %}
+
+	<h1>Contactez nous</h1>
+	<div class="card mt-3 w-auto">
+		<div class="card-title"></div>
+		<div class="card-body">
+			<form id="form-floating" action="" method="post">
+				<fieldset>
+					<legend>Identité</legend>
+					<div class="mb-3">
+						<label for="floatingInputValue">Prénom
+						</label>
+						<input type="text" class="form-control" id="prenom" placeholder="Prénom" name="prenom">
+					</div>
+					<div class="mb-3">
+						<label for="floatingInputValue">Nom</label>
+						<input type="text" class="form-control" id="nom" placeholder="Nom" name="nom">
+					</div>
+					<div class="mb-3">
+						<label for="floatingInputValue">Adresse e-mail</label>
+						<input type="email" class="form-control" id="floatingInputValue" placeholder="adresse@email.com">
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Message</legend>
+					<div class="mb-3 form-floating">
+						<textarea class="form-control" id="message" placeholder="Votre message" name="message" style="height: 200px"></textarea>
+					</div>
+				</fieldset>
+				<button id="submit" class="btn btn-danger">Envoyer</button>
+			</form>
+		</div>
+	</div>
+
+{% endblock %}

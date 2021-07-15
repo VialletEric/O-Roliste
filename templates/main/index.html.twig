@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}O'Roliste
+{% endblock %}
+
+{% block body %}
+
+	<h1>O'Roliste</h1>
+
+    <div class="card-group">
+
+        <div class="card h-100 mx-1 p-2 m-2">
+            <h4>Bienvenue Aventurier !</h4>
+            <p class="card-text text-center">
+                Le site qui vous permet de publier et trouver des parties de jeux de rôle dans toute la france ! <br>
+                Que vous soyez un veteran ou un nouveau joueur venez touver des parties près de chez vous ou en ligne.
+            </p>
+        </div>
+    </div>
+
+	<div class="card-group mb-5 d-none d-md-flex">
+
+		<div class="card h-100 mx-1">
+			<div class="card-body">
+
+				<h4>Dernières parties publiées</h4>
+
+				{% for gameFive in gamesFive %}
+					<div class="mt-2">
+						<div class="fw-bold text-capitalize">{{ gameFive.name }}</div>
+
+						<img src="{{ asset(images_directory ~ '/' ~ gameFive.image) }}" class="rounded-circle img-thumbnail" width="100" alt="Illustration de {{gameFive.name}}">
+						<p class="card-text text-truncate">{{ gameFive.description}}</p>
+						<div>nombre de joueurs max .
+							{{ gameFive.maxPlayer}}</div>
+						<div>
+							<a href="{{path('game_read',{'id': gameFive.id}) }}">
+								<button class="btn btn-danger btn-sm" type="button">Afficher plus de détails</button>
+							</a>
+						</div>
+					</div>
+				{% endfor %}
+
+				<div class="d-grid gap-2 col-6 mx-auto">
+					<a href="{{path('game_browse') }}">
+						<button class="btn btn-danger" type="button">Voir toutes les parties</button>
+					</a>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="card h-100 mx-1">
+			<div class="card-body">
+
+				<h4>Nouveaux joueurs</h4>
+
+				{% for userFive in usersFive %}
+					<div class='mt-2'>
+						<div class="fw-bold text-capitalize">{{ userFive.username}}</div>
+						<div><img src="{{ asset(images_directory ~ '/' ~ userFive.avatar) }}" class="rounded-circle img-thumbnail" width="100" alt="avatar de {{userFive.username}}"></div>
+						<p class="card-text text-truncate">{{ userFive.description}}
+						</p>
+						<div>
+							<a href="{{path('user_read',{'id': userFive.id}) }}" class="btn btn-danger btn-sm">
+								Voir le profil
+							</a>
+
+							{% if is_granted('ROLE_USER') %}
+								{% if is_granted('IS_NOT_USER', userFive) %}
+									<a href="{{path('conversation_add',{'id': userFive.id}) }}" class="btn btn-danger btn-sm">
+										Message
+									</a>
+									<form action="{{ path('friend_add', {id: userFive.id}) }}" method="post" class="d-inline">
+										<button class="btn btn-danger btn-sm">Ajouter en ami</button>
+										<input type="hidden" name="_method" value="add">
+										<input type="hidden" name="_token" value="{{ csrf_token('addFriend') }}">
+									</form>
+								{% endif %}
+
+							{% endif %}
+
+						</div>
+					</div>
+
+				{% endfor %}
+				<div class="d-grid gap-2 col-6 mx-auto">
+					<a href="{{path('user_browse') }}">
+						<button class="btn btn-danger" type="button">Voir tous les joueurs</button>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="accordion d-md-none" id="accordionExample">
+
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="headingOne">
+				<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+					Dernières parties publiées
+				</button>
+			</h2>
+
+			<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+				{% for gameFive in gamesFive %}
+					<div class="accordion-body">
+						<div class="mt-2">
+
+							<div class="fw-bold text-capitalize">{{ gameFive.name }}</div>
+
+							<img src="{{ asset(images_directory ~ '/' ~ gameFive.image) }}" class="rounded-circle img-thumbnail" width="100" alt="Illustration de {{gameFive.name}}">
+							<p class="card-text text-truncate">{{ gameFive.description}}</p>
+							<div>nombre de joueurs max .
+								{{ gameFive.maxPlayer}}</div>
+							<div>
+								<a href="{{path('game_read',{'id': gameFive.id}) }}">
+									<button class="btn btn-danger btn-sm" type="button">Afficher plus de détails</button>
+								</a>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+
+		</div>
+
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="headingTwo">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					Nouveaux joueurs disponibles
+				</button>
+			</h2>
+			<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+				{% for userFive in usersFive %}
+					<div class="accordion-body">
+						<div class="mt-2">
+							<div class="fw-bold text-capitalize">{{ userFive.username}}</div>
+							<div><img src="{{ asset(images_directory ~ '/' ~ userFive.avatar) }}" class="rounded-circle img-thumbnail" width="100" alt="avatar de {{userFive.username}}"></div>
+							<p class="card-text text-truncate">{{ userFive.description}}
+							</p>
+							<div>
+								<a href="{{path('user_read',{'id': userFive.id}) }}">
+									<button class="btn btn-danger btn-sm" type="button">Voir le profil</button>
+								</a>
+
+								{% if is_granted('IS_NOT_USER', userFive) %}
+									<a href="{{path('conversation_add',{'id': userFive.id}) }}" class="btn btn-danger btn-sm">
+										Message
+									</a>
+
+									<form action="{{ path('friend_add', {id: userFive.id}) }}" method="post" class="d-inline">
+
+										<button class="btn btn-danger btn-sm">Ajouter en ami</button>
+
+										<input type="hidden" name="_method" value="add">
+										<input type="hidden" name="_token" value="{{ csrf_token('addFriend') }}">
+									</form>
+								{% endif %}
+
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}

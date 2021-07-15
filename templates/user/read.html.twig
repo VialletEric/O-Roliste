@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{% if error is defined and error is not empty %}
+		<div class="alert alert-danger" role="alert">
+			{{error}}
+		</div>
+	{% endif %}
+
+	<h1>{{user.username}}</h1>
+	<div class="card mb-3" style="max-width: 100%;">
+		<div class="row g-0">
+			<div class="col-md-2">
+
+				<img src="{{ asset(images_directory ~ '/' ~ user.avatar)}}" class="img-thumbnail" width="200" height="200" alt="{{user.username}}">
+			</div>
+			<div class="col-md-8">
+				<div class="card-body">
+					<p class="card-text">
+						{{user.description}}
+					</p>
+					{% if is_granted('ROLE_USER', user) %}
+						<a href="{{path('conversation_add',{'id': user.id}) }}" class="btn btn-danger btn-sm">
+							Message
+						</a>
+						<form action="{{ path('friend_add', {id: user.id}) }}" method="post" class="d-inline">
+
+							<button class="btn btn-danger btn-sm">Ajouter en ami</button>
+
+							<input type="hidden" name="_method" value="add">
+							<input type="hidden" name="_token" value="{{ csrf_token('addFriend') }}">
+						</form>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% if is_granted('ROLE_USER', user) %}
+
+		<button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFormInvit" aria-expanded="false" aria-controls="collapseSearchBar">
+			Ajouter à une partie
+			<img src="{{asset("images/icons/arrow-down-square.svg")}}" width="25" height="25">
+		</button>
+		<div class="collapse" id="collapseFormInvit">
+			<div class="card card-body">
+				{{ render(controller('App\\Controller\\InvitationController::form', { 'idUser': user.id})) }}
+			</div>
+		</div>
+	{% endif %}
+
+
+	{% if is_granted('ROLE_USER') %}
+		{#}check if gamesCreate is empty #}
+		{% if gamesCreate %}
+			<h2>Parties créer</h2>
+
+			{% for gameCreate in gamesCreate %}
+				<div class="card mb-3" style="max-width: 100%;">
+					<div class="row g-0">
+						<div class="col-md-2">
+							<img src="{{ asset(images_directory ~ '/' ~ gameCreate.image) }}" class="rounded-circle img-thumbnail" width="150" alt="Illustration de {{gameCreate.name}}">
+						</div>
+						<div class="col-md-8">
+							<div class="card-body">
+								<h5 class="card-title">{{ gameCreate.name }}</h5>
+								<p class="card-text d-inline-block text-truncate" style="max-width: 100%;">{{ gameCreate.description }}</p>
+
+								<br>
+								<a href="{{path('game_read',{'id': gameCreate.id}) }}" class="btn btn-danger">
+									Voir le détail
+								</a>
+								{% if is_granted('FRIEND_ADD', user) %}
+									<a href="{{ path('game_edit',{'id':gameCreate.id}) }}" class="btn btn-danger">
+										Editer
+									</a>
+									<form method="post" class="d-inline" action="{{ path('game_delete', {'id':gameCreate.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer cette partie ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ gameCreate.id) }}">
+										<button class=" btn btn-danger">Supprimer</button>
+									</form>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% endif %}
+
+		{% if inviteOnGames is not empty %}
+			<h2>Parties Rejointes</h2>
+			{% for game in inviteOnGames %}
+				<div class="card mb-3" style="max-width: 100%;">
+					<div class="row g-0">
+						<div class="col-md-2">
+							<img src="{{ asset(images_directory ~ '/' ~ game.image) }}" class="rounded-circle img-thumbnail" width="150" alt="Illustration de {{game.name}}">
+						</div>
+						<div class="col-md-8">
+							<div class="card-body">
+								<h5 class="card-title">{{ game.name }}</h5>
+								<p class="card-text d-inline-block text-truncate" style="max-width: 100%;">{{ game.description }}</p>
+
+								<br>
+								<a href="{{path('game_read',{'id': game.id}) }}" class="btn btn-danger">
+									Voir le détail
+								</a>
+								{% if is_granted('FRIEND_ADD', user) %}
+									<a href="{{ path('game_edit',{'id':game.id}) }}" class="btn btn-danger">
+										Editer
+									</a>
+									<form method="post" class="d-inline" action="{{ path('game_delete', {'id':game.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer cette partie ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ game.id) }}">
+										<button class=" btn btn-danger">Supprimer</button>
+									</form>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% endif %}
+
+	{% endif %}
+
+
+{% endblock %}

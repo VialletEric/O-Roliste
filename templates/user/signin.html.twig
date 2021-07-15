@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}S'enregistrer
+{% endblock %}
+
+{% block body %}
+
+	<h1>Inscrivez-vous</h1>
+
+	<div class="card mt-3 w-auto">
+		<div class="card-body">
+			<span class="important__label">(*) champs obligatoires</span>
+			{{ form_start(form) }}
+			{{ form_widget(form) }}
+			{{ form_end(form) }}
+		</div>
+	</div>
+
+{% endblock %}

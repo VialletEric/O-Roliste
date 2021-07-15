@@ -1,0 +1,30 @@
+<button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearchBar" aria-expanded="false" aria-controls="collapseSearchBar">
+	Recherche
+	<img src="{{asset("images/icons/arrow-down-square.svg")}}" width="25" height="25">
+</button>
+<div class="collapse" id="collapseSearchBar">
+	<div id="carouselIndicators" class="carousel carousel-dark slide" data-bs-interval="false" data-bs-ride="carousel">
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<div class="card card-body">
+						<h5>Partie</h5>
+						{{ render(controller('App\\Controller\\SearchController::searchBar')) }}
+					</div>
+				</div>
+				<div class="carousel-item">
+					<div class="card card-body">
+						<h5>Joueur</h5>
+						{{ render(controller('App\\Controller\\SearchController::searchUserForm')) }}
+					</div>
+				</div>
+			</div>
+			<button class="carousel-control-prev" type="button" data-bs-target="#carouselIndicators" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Précedent</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#carouselIndicators" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Suivant</span>
+			</button>
+         </div>
+	</div>

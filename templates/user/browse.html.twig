@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des joueurs
+{% endblock %}
+
+{% block body %}
+
+{% for user in users %}
+	<div class="card mb-3" style="max-width: 100%;">
+		<div class="row g-0">
+			<div class="col-md-2">
+				<img src="{{ asset(images_directory ~ '/' ~ user.avatar)}}" class="img-thumbnail" width="200" height="200" alt="{{user.username}}">
+			</div>
+			<div class="col-md-8">
+				<div class="card-body">
+					<h5 class="card-title">{{ user.username }}</h5>
+					<p class="card-text d-inline-block text-truncate" style="max-width: 100%;">{{ user.description }}</p>
+				</p>
+				{% if is_granted('ROLE_USER', user) %}
+					{% if is_granted('IS_USER', user) %}
+
+						<form action="{{ path('friend_add', {id: user.id}) }}" method="post" class="d-inline">
+
+							<button class="btn btn-danger btn-sm">Ajouter en ami</button>
+
+							<input type="hidden" name="_method" value="add">
+							<input type="hidden" name="_token" value="{{ csrf_token('addFriend') }}">
+						</form>
+
+						<a href="{{ path("user_read",{id: user.id}) }}" class="btn btn-danger btn-sm">
+							Voir le profil</a>
+					{% endif %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>{% endfor %}{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	{# edit user forms #}
+	<h1>Modification du profil</h1>
+
+	<div class="card mt-3 w-auto">
+		<div class="card-body">
+
+			<span class="important__label">(*) champs obligatoires</span>
+			{{ form_start(form) }}
+			{{ form_widget(form) }}
+
+			<a href="{{path('user_edit-password')}}"class="btn btn-danger">
+				Modifier le mot de passe
+			</a>
+
+			{{ form_end(form) }}
+		</div>
+	</div>
+{% endblock %}

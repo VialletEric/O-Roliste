@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<h1>{{user.username}}</h1>
+	<div class="card mb-3" style="max-width: 100%;">
+		<div class="row g-0">
+			<div class="col-md-2">
+
+				<img src="{{ asset(images_directory ~ '/' ~ user.avatar)}}" class="img-thumbnail" width="200" height="200" alt="{{user.username}}">
+			</div>
+			<div class="col-md-8">
+				<div class="card-body">
+					<p class="card-text">
+						{{user.email}}
+					</p>
+				</div>
+				<div class="card-body">
+					<p class="card-text">
+						{{user.description}}
+					</p>
+				</div>
+			</div>
+		</div>
+		<a href="{{path("user_edit")}}">
+			<button class="btn btn-danger btn-sm" type="button">
+				Modifier  son profil
+			</button>
+		</a>
+	</div>
+
+{#check if gamesCreate is empty #}
+{% if gamesCreate %}
+	<h2>Parties créer</h2>
+
+	{% for gameCreate in gamesCreate %}
+		<div class="card mb-3" style="max-width: 100%;">
+			<div class="row g-0">
+				<div class="col-md-2">
+					<img src="{{ asset(images_directory ~ '/' ~ gameCreate.image) }}" class="rounded-circle img-thumbnail" width="150" alt="Illustration de {{gameCreate.name}}">
+				</div>
+				<div class="col-md-8">
+					<div class="card-body">
+						<h5 class="card-title">{{ gameCreate.name }}</h5>
+						<p class="card-text d-inline-block text-truncate" style="max-width: 100%;">{{ gameCreate.description }}</p>
+
+						<br>
+						<a href="{{path('game_read',{'id': gameCreate.id}) }}" class="btn btn-danger btn-sm">
+							Voir le détail
+						</a>
+						<a href="{{ path('game_edit',{'id':gameCreate.id}) }}"class="btn btn-danger btn-sm">
+							Editer
+						</a>
+						<form method="post" class="d-inline" action="{{ path('game_delete', {'id':gameCreate.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer cette partie ?');">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ gameCreate.id) }}">
+						<button class=" btn btn-danger btn-sm">Supprimer</button>
+						</form>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+{% endif %}
+{% endblock %}

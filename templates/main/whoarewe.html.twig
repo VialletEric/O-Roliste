@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Qui sommes nous ?
+{% endblock %}
+
+{% block body %}
+
+<h1>Qui sommes nous ?</h1>
+<div class="card-group mt-3 mx-auto">
+			<div class="card text-center">
+				<img src="{{asset('/images/avatar-creator/paul.png')}}" class="mx-auto mt-1 rounded img-thumbnail" width="150" alt="Avatar de Paul">
+				<div class="card-body">
+					<h5 class="card-title">paul</h5>
+					<p class="card-text">Product Owner et Git Master</p>
+				</div>
+			</div>
+
+			<div class="card text-center">
+				<img src="{{asset('/images/avatar-creator/eric.png')}}" class="mx-auto mt-1 rounded img-thumbnail" width="150" alt="Avatar d'Eric">
+				<div class="card-body">
+					<h5 class="card-title">éric</h5>
+					<p class="card-text">Scrum Master et lead dev front</p>
+				</div>
+			</div>
+
+			<div class="card text-center">
+				<img src="{{asset('/images/avatar-creator/jeremy.png')}}" class="mx-auto mt-1 rounded img-thumbnail" width="150" alt="Avatar de Jérémy">
+				<div class="card-body">
+					<h5 class="card-title">jérémy</h5>
+					<p class="card-text">Lead dev back</p>
+				</div>
+			</div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% if is_granted('ROLE_USER') %}
+
+	<button class="btn btn-danger" data-bs-toggle="collapse" data-bs-target="#globalMessages" aria-expanded="false" aria-controls="globalMessages">Affichez les commentaires
+	</button>
+
+
+	<div class="collapse" id="globalMessages">
+
+
+			{{render(controller('App\\Controller\\GameMessageController::form', { 'gameId':game.id }))}}
+
+
+	<div class="overflow-auto" id="gameMessages" style="max-height: 30rem;">
+			{% for gameMessage in gameMessages %}
+				<div class="card mt-1">
+					<div class="card-header">
+						<img src="{{ asset(images_directory ~ '/' ~ gameMessage.user.avatar) }}" class="rounded-circle img-thumbnail" width="75" alt="Avatar de {{gameMessage.user.username}}">
+						{{gameMessage.user.username}}
+
+						{% if is_granted('MESSAGE_EDIT', gameMessage) %}
+							<a href="{{ path('game_message_edit',{'id':idGame,'idMessage':gameMessage.id}) }}" class="btn btn-danger btn-sm">
+								Editer
+							</a>
+
+							<form method="post" class="d-inline" action="{{ path('game_message_delete', {'id':idGame,'idMessage':gameMessage.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer ce message ?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ gameMessage.id) }}">
+								<button class="btn btn-danger btn-sm">Supprimer</button>
+							</form>
+
+						{% endif %}
+					</div>
+					<div class="card-body">
+						<p>{{ gameMessage.body }}</p>
+						<footer class="blockquote-footer">Posté le :
+							{{gameMessage.createdAt|date('d/m/Y à h:i')}}
+							{{ gameMessage.updatedAt is not null ? "modifié le : " ~ gameMessage.updatedAt|date('d/m/Y à h:i') }}</footer>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}

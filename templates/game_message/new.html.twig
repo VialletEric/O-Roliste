@@ -1,0 +1,12 @@
+	{% if is_granted('ROLE_USER') %}
+
+		<div class="card w-auto mt-1">
+			<div class="card-body">
+                <span class="important__label">(*) champs obligatoires</span>
+				{{ form_start(form) }}
+				{{ form_widget(form) }}
+				{{ form_end(form) }}
+			</div>
+		</div>
+
+	{% endif %}

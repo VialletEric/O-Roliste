@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+{% for game in games %}
+
+	<div class="card mb-3" style="max-width: 100%;">
+		<div class="row g-0">
+			<div class="col-md-2">
+				<img src="{{ asset(images_directory ~ '/' ~ game.image) }}" class="rounded-circle img-thumbnail" width="150" alt="Illustration de {{game.name}}">
+			</div>
+			<div class="col-md-8">
+				<div class="card-body">
+					<h5 class="card-title">{{ game.name }}</h5>
+					<p class="card-text d-inline-block text-truncate" style="max-width: 100%;">{{ game.description }}</p>
+				</p>
+				<footer class="blockquote-footer">Crée le :
+						{{game.createdAt|date('d/m/Y à h:i')}}
+						{{ game.updatedAt is not null ? "modifié le : " ~ game.updatedAt|date('d/m/Y à h:i') }}</footer>
+				<div class="d-grid gap-2 col-6 mx-auto">
+					<a href="{{path('game_read',{'id': game.id}) }}">
+						<button class="btn btn-danger" type="button">Détails</button>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endfor %}{% endblock %}

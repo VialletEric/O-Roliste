@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	{% if is_granted('ROLE_USER') %}
+
+		<h1>Création d'une partie</h1>
+
+		<div class="card mt-3 w-auto">
+			<div class="card-body">
+
+                <span class="important__label">(*) champs obligatoires</span>
+				{{ form_start(form) }}
+				{{ form_widget(form) }}
+				{{ form_end(form) }}
+
+			</div>
+		</div>
+	{% endif %}
+
+{% endblock %}

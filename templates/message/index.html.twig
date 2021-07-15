@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+		{% for convMessage in convMessages %}
+			<div class="card mt-1">
+				<div class="card-header">
+					<img src="{{ asset(images_directory ~ '/' ~ convMessage.user.avatar) }}" class="rounded-circle img-thumbnail" width="75" alt="Avatar de {{convMessage.user.username}}">
+					{{convMessage.user.username}}
+
+					{% if is_granted('MESSAGE_EDIT', convMessage) %}
+						<a href="{{ path('game_message_edit',{'id':idGame,'idMessage':convMessage.id}) }}">
+							<button class="btn btn-danger">Editer</button>
+						</a>
+
+						<form method="post" class="d-inline" action="{{ path('game_message_delete', {'id':idGame,'idMessage':convMessage.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer ce message ?');">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ convMessage.id) }}">
+							<button class="btn btn-danger">Supprimer</button>
+						</form>
+
+					{% endif %}
+				</div>
+				<div class="card-body">
+					<p>{{ convMessage.body }}</p>
+						<footer class="blockquote-footer">Posté le : {{convMessage.createdAt|date('d/m/Y à h:i')}} {{ convMessage.updatedAt is not null ? "modifié le : " ~ convMessage.updatedAt|date('d/m/Y à h:i') }}</footer>
+				</div>
+			</div>
+		{% endfor %}
+{% endblock %}

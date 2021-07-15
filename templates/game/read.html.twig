@@ -1,0 +1,332 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<h1>{{game.name}}</h1>
+
+	{% if is_granted('GAME_EDIT',game) %}
+
+		<a href="{{ path('game_edit',{'id':game.id}) }}" class="btn btn-danger">
+			Editer
+		</a>
+
+		<form method="post" class="d-inline" action="{{ path('game_delete', {'id':game.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer cette partie ?');">
+			<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ game.id) }}">
+			<button class="btn btn-danger">Supprimer</button>
+		</form>
+
+	{% endif %}
+
+	<div class="card mb-3" style="max-width: 100%;">
+		<div class="row g-0">
+			<div class="col-md-2">
+				<div class="card-title">
+					<h3>Maitre du jeu</h3>
+				</div>
+				<img src="{{ asset(images_directory ~ '/' ~ game.creator.avatar)}}" class="rounded-circle img-thumbnail" width="150" alt="{{game.creator.username}}">
+			</div>
+			<div class="col-md-8">
+				<div class="card-body">
+					<h5 class="card-title">{{ game.creator }}</h5>
+					<p class="card-text">
+						{{ game.creator.description}}
+					</p>
+					{% if is_granted('ROLE_USER') %}
+						<a href="{{path('conversation_add',{'id': game.creator.id}) }}" class="btn btn-danger btn-sm">Message</a>
+						<a href="{{path('user_read',{'id': game.creator.id}) }}" class="btn btn-danger btn-sm">Profil</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card mb-3" style="max-width: 100%;">
+		<div class="row g-0">
+			<div class="col-md-2">
+				<div class="card-title">
+					<h3>Detail du jeu</h3>
+				</div>
+				<img src="{{ asset(images_directory ~ '/' ~ game.image) }}" class="rounded-circle img-thumbnail" width="150" alt="Illustration de {{game.name}}">
+			</div>
+			<div class="col-md-8">
+				<div class="card-body">
+					<h5 class="card-title">{{ game.name }}</h5>
+					<p class="card-text">{{ game.description }}
+					</p>
+					<footer class="blockquote-footer">Crée le :
+						{{game.createdAt|date('d/m/Y à h:i')}}
+						{{ game.updatedAt is not null ? "modifié le : " ~ game.updatedAt|date('d/m/Y à h:i') }}</footer>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row row-cols-1 row-cols-md-4 g-4 d-none d-md-flex">
+
+		<div class="col">
+			<div class="card h-100">
+				<div class="card-body">
+					<h6 class="card-title">Nombres de joueurs maximum</h6>
+					<p class="card-text"><img src="{{asset("images/icons/people.svg")}}" width="25" height="25" alt="Amis">
+						{{ game.maxPlayer }}</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col">
+			<div class="card h-100">
+				<div class="card-body">
+					<h6 class="card-title">Frequence des parties</h6>
+					<p class="card-text"><img src="{{asset("images/icons/alarm.svg")}}" width="25" height="25" alt="Alarme">
+						{{ game.frequency }}</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col">
+			<div class="card h-100">
+				<div class="card-body">
+					<h6 class="card-title">Prochaine partie</h6>
+					<p class="card-text"><img src="{{asset("images/icons/calendar.svg")}}" class="mx-1" width="25" height="25" alt="Calendar">{{ game.nextDate|date('d/m/Y') }}</p>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100">
+				<div class="card-body">
+					<h6 class="card-title">Lien vers la partie</h6>
+					{% if is_granted('ROLE_USER') %}
+						<p class="card-text">
+							{% if autorisation %}
+								<img src="{{asset("images/icons/link-45deg.svg")}}" width="25" height="25" alt="link">
+								<a href="#">
+									{{ game.link }}</a>
+							{% else %}
+								Vous devez être invité pour avoir cette infos
+							{% endif %}
+						</p>
+					{% else %}
+						{% include "game/_login_connect.html.twig" %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100">
+				<div class="card-body">
+					<h6 class="card-title">Catégorie de la partie</h6>
+					<p class="card-text badge rounded-pill bg-success"><img src="{{asset("images/icons/tags-fill.svg")}}" width="25" height="25" alt="category">{{ game.category }}</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col">
+			<div class="card h-100">
+				<div class="card-body">
+					<h6 class="card-title">Tags de la partie</h6>
+					<p class="card-text badge rounded-pill bg-warning text-dark"><img src="{{asset("images/icons/tags-fill.svg")}}" width="25" height="25" alt="tag">
+						{% for tag in game.tags %}
+							{{ tag }}
+						{% endfor %}
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col">
+			<div class="card h-100">
+				<div class="card-body">
+					<h6 class="card-title">Adresse de la partie</h6>
+					{% if is_granted('ROLE_USER') %}
+						<p class="card-text">
+							{% if autorisation %}
+								<img src="{{asset("images/icons/cup-fill.svg")}}" class="mx-1" width="25" height="25" alt="adresse">{{ game.address }}
+							{% else %}
+								Vous devez être invité pour avoir cette information
+							{% endif %}
+						</p>
+					{% else %}
+						{% include "game/_login_connect.html.twig" %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		<div class="col">
+			<div class="card h-100">
+				<div class="card-body">
+					<h6 class="card-title">Joueurs inscrits</h6>
+					{% for guest in game.guests %}
+						<p class="card-text">
+							<a href="{{path("user_read",{id: guest.id})}}">{{guest.username}}</a>
+							{% if is_granted('ROLE_USER') %}
+								{% if is_granted('IS_USER',game.creator) %}
+									<a href="{{path("invitation_delete", {id:game.id, idGuest:guest.id})}}" class="btn btn-danger">Supprimer</a>
+								{% endif %}
+							{% endif %}
+						</p>
+					{% endfor %}
+					{% if is_granted('IS_USER',game.creator) %}
+						{% if game.guests is empty %}
+							<p>Vous n'avez invité aucun joueurs</p>
+							<a href="{{path("user_browse")}}">Trouvez en dès maintenant !</a>
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="accordion d-md-none" id="accordionPanelsStayOpenExample">
+		<div class="accordion-item ">
+			<h2 class="accordion-header" id="panelsStayOpen-headingOne">
+				<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+					Nombres de joueurs maximum
+				</button>
+			</h2>
+			<div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+				<div class="accordion-body">
+					<p class="card-text"><img src="{{asset("images/icons/people.svg")}}" width="25" height="25" alt="Amis">
+						{{ game.maxPlayer }}</p>
+				</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+					Fréquence des parties
+				</button>
+			</h2>
+			<div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+				<div class="accordion-body">
+					<p class="card-text"><img src="{{asset("images/icons/alarm.svg")}}" width="25" height="25" alt="Alarme">
+						{{ game.frequency }}</p>
+				</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="panelsStayOpen-headingThree">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+					Prochaine partie
+				</button>
+			</h2>
+			<div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+				<div class="accordion-body">
+					<p class="card-text"><img src="{{asset("images/icons/calendar.svg")}}" width="25" height="25" alt="Calendar">{{ game.nextDate|date('d/m/Y') }}</p>
+				</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="panelsStayOpen-headingFour">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseFour">
+					Lien vers la partie
+				</button>
+			</h2>
+			<div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
+				<div class="accordion-body">
+					{% if is_granted('ROLE_USER') %}
+						{% if autorisation %}
+							<img src="{{asset("images/icons/link-45deg.svg")}}" width="25" height="25" alt="link">
+							<a href="#">
+								{{ game.link }}</a>
+						{% else %}
+							Vous devez être invité pour avoir cette infos
+						{% endif %}
+					{% else %}
+						{% include "game/_login_connect.html.twig" %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="panelsStayOpen-headingFive">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" aria-controls="panelsStayOpen-collapseFive">
+					Catégorie de la partie
+				</button>
+			</h2>
+			<div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFive">
+				<div class="accordion-body">
+					<p class="card-text badge rounded-pill bg-success"><img src="{{asset("images/icons/tags-fill.svg")}}" width="25" height="25" alt="category">{{ game.category }}</p>
+				</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="panelsStayOpen-headingSix">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix">
+					Tags de la partie
+				</button>
+			</h2>
+			<div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
+				<div class="accordion-body">
+				<p class="card-text badge rounded-pill bg-warning text-dark"><img src="{{asset("images/icons/tags-fill.svg")}}" width="25" height="25" alt="tag">
+					{% for tag in game.tags %}
+						{{ tag }}
+					{% endfor %}
+				</p>	
+				</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="panelsStayOpen-headingSeven">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSeven" aria-expanded="false" aria-controls="panelsStayOpen-collapseSeven">
+					Adresse de la partie
+				</button>
+			</h2>
+			<div id="panelsStayOpen-collapseSeven" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSeven">
+				<div class="accordion-body">
+					{% if is_granted('ROLE_USER') %}
+						<p class="card-text">
+							{% if autorisation %}
+								<img src="{{asset("images/icons/cup-fill.svg")}}" class="mx-1" width="25" height="25" alt="adresse">{{ game.address }}
+							{% else %}
+								Vous devez être invité pour avoir cette information
+							{% endif %}
+						</p>
+					{% else %}
+						{% include "game/_login_connect.html.twig" %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="panelsStayOpen-headingEight">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseEight" aria-expanded="false" aria-controls="panelsStayOpen-collapseEight">
+					Joueurs inscrits
+				</button>
+			</h2>
+			<div id="panelsStayOpen-collapseEight" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingEight">
+				<div class="accordion-body">
+					{% for guest in game.guests %}
+						<p class="card-text">
+							<a href="{{path("user_read",{id: guest.id})}}">{{guest.username}}</a>
+
+							{% if is_granted('ROLE_USER') %}
+								{% if is_granted('IS_USER',game.creator) %}
+									<a href="{{path("invitation_delete", {id:game.id, idGuest:guest.id})}}" class="btn btn-danger">Supprimer</a>
+								{% endif %}
+							{% endif %}
+						</p>
+					{% endfor %}
+
+					{% if is_granted('IS_USER',game.creator) %}
+						{% if game.guests is empty %}
+							<p>Vous n'avez invité aucun joueurs</p>
+							<a href="{{path("user_browse")}}">Trouvez en dés maintenant !</a>
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="d-grid gap-2 d-md-flex justify-content-md-between">
+		<a href="{{path('game_browse') }}" class="btn btn-danger me-md-2 btn-lg">
+			Retour à la liste des parties
+		</a>
+	</div>
+
+	{% include "game_message/list.html.twig" %}
+
+{% endblock %}

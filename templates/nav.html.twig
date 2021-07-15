@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+	<div class="container-fluid">
+
+		{% if is_granted('ROLE_USER') %}
+			<li class="nav-item me-3">
+				<a href="{{path("user_profil")}}" class="nav-link">
+					<img src="{{ asset(images_directory ~ '/' ~ app.user.avatar)}}" class="rounded-circle" width="30" height="30" alt="{{app.user.username}}">
+				</a>
+			</li>
+		{% endif %}
+
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+			<ul class="navbar-nav list-group-horizontal">
+				{% if app.user is null %}
+					<li class="nav-item me-3">
+						<a href="{{path("app_login")}}">
+							<button class="btn btn-danger" type="button">
+								Connexion
+							</button>
+						</a>
+					</li>
+					<li class="nav-item me-3">
+						<a href="{{path("user_signin")}}">
+							<button class="btn btn-danger" type="button">
+								Inscription
+							</button>
+						</a>
+					</li>
+					<li class="nav-item me-3 mt-2">
+						<a class="nav-link" href="{{path('main_home')}}"><img src="{{asset("images/icons/house.svg")}}" width="25" height="25" alt="Acceuil">
+						</a>
+					</li>
+				{% endif %}
+
+				{% if is_granted('ROLE_USER') %}
+					<li class="nav-item me-3">
+						<a class="nav-link" href="{{path('main_home')}}"><img src="{{asset("images/icons/house.svg")}}" width="25" height="25" alt="Acceuil">
+						</a>
+					</li>
+					<li class="nav-item me-3">
+						<a class="nav-link" href="{{path('conversation_browse')}}"><img src="{{asset("images/icons/envelope.svg")}}" width="25" height="25" alt="Message">
+						</a>
+					</li>
+				{#}	<li class="nav-item me-3">
+						<a class="nav-link" href="#"><img src="{{asset("images/icons/bell.svg")}}" width="25" height="25" alt="Notifications">
+						</a>
+					</li>{#}
+					<li class="nav-item me-3">
+						<a class="nav-link" href="{{path('friend_read',{'id': app.user.id}) }}"><img src="{{asset("images/icons/people.svg")}}" width="25" height="25" alt="Amis">
+						</a>
+					</li>
+					<li class="nav-item me-3">
+						<a class="nav-link" href="{{path('game_add')}}"><img src="{{asset("images/icons/dice-5.svg")}}" width="25" height="25" alt="Créer une partie">
+						</a>
+					</li>
+					<li class="nav-item me-3">
+						<a class="nav-link" href="{{ path('app_logout') }}"><img src="{{asset("images/icons/door-open.svg")}}" width="25" height="25" alt="Se déconnecter"></a>
+					</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</nav>

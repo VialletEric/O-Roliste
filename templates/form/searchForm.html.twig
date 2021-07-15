@@ -1,0 +1,8 @@
+{{form_start(form, {'method': 'GET'})}}
+		{{form_row(form.name)}}
+		{{form_row(form.category)}}
+		<div class="overflow-auto" style='max-height: 8rem;'>
+		{{form_row(form.tags)}}
+		</div>
+{{form_end(form)}}
+
